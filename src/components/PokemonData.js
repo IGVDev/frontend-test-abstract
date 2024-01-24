@@ -15,6 +15,7 @@ import {
   Badge,
   HStack,
   Checkbox,
+  Flex,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -26,7 +27,7 @@ export default function PokemonData({ pokemon }) {
     <Stack spacing="5" pb="5">
       <Stack spacing="5" position="relative">
         <Box position="absolute" right="0" zIndex="99">
-          <Checkbox>Catched</Checkbox>
+        <Checkbox>Catched</Checkbox>
         </Box>
         <AspectRatio w="full" ratio={1}>
           <Image
@@ -37,21 +38,24 @@ export default function PokemonData({ pokemon }) {
         <Stack direction="row" spacing="5">
           <Stack>
             <Text fontSize="sm">Weight</Text>
-            <Text>20</Text>
+            <Text>{pokemon.weight}</Text>
           </Stack>
           <Stack>
             <Text fontSize="sm">Height</Text>
-            <Text>12</Text>
+            <Text>{pokemon.height}</Text>
           </Stack>
           <Stack>
             <Text fontSize="sm">Movimientos</Text>
-            <Text>109</Text>
+            <Text>{pokemon.moves.length}</Text>
           </Stack>
           <Stack>
             <Text fontSize="sm">Tipos</Text>
             <HStack>
-              <Badge>Agua</Badge>
-              <Badge>Agua</Badge>
+              {pokemon.types.map((type) => (
+                <Badge size="xs" key={type.slot}>
+                  {type.type.name}
+                </Badge>
+              ))}
             </HStack>
           </Stack>
         </Stack>
@@ -59,12 +63,19 @@ export default function PokemonData({ pokemon }) {
 
       <Stack spacing="5" p="5" bg="gray.100" borderRadius="xl">
         <Stack>
+          <Flex justifyContent={"space-between"}>
           <Text fontSize="xs">hp</Text>
-          <Progress bg="gray.300" borderRadius="full" value={80} />
+          <Text fontSize="xs">{pokemon.stats[0].base_stat}</Text>
+          </Flex>
+          <Progress bg="gray.300" borderRadius="full" value={pokemon.stats[0].base_stat} />
         </Stack>
         <Stack>
+          <Flex justifyContent={"space-between"}>
           <Text fontSize="xs">attack</Text>
-          <Progress bg="gray.300" borderRadius="full" value={65} />
+          <Text fontSize="xs">{pokemon.stats[1].base_stat}</Text>
+
+          </Flex>
+          <Progress bg="gray.300" borderRadius="full" value={pokemon.stats[1].base_stat} />
         </Stack>
       </Stack>
     </Stack>
