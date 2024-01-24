@@ -20,6 +20,7 @@ import {
   ModalContent,
   ModalCloseButton,
   useDisclosure,
+  Text,
 } from "@chakra-ui/react";
 import PokemonCard from "@/components/PokemonCard";
 import PokemonData from "@/components/PokemonData";
@@ -27,26 +28,47 @@ import PokemonData from "@/components/PokemonData";
 export default function Home() {
   const pokemonDataModal = useDisclosure();
 
+  const [totalPages, setTotalPages] = useState(0);
+
   const [isLoading, setIsLoading] = useState(false);
   const [pokemon, setPokemon] = useState([]);
   const [selectedPokemon, setSelectedPokemon] = useState();
-  const [currentPage, setCurrentPage] = useState(
-    "https://pokeapi.co/api/v2/pokemon/?limit=20&offset=0"
-  );
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     setIsLoading(true);
-    axios.get(currentPage).then(async ({ data }) => {
-      const promises = data.results.map((result) => axios(result.url));
-      const fetchedPokemon = (await Promise.all(promises)).map(
-        (res) => res.data
-      );
-      setPokemon((prev) => [...prev, ...fetchedPokemon]);
-      setIsLoading(false);
-    });
+    axios
+      .get(
+        `https://pokeapi.co/api/v2/pokemon/?limit=20&offset=${
+          (currentPage - 1) * 20
+        }`
+      )
+      .then(async ({ data }) => {
+        const promises = data.results.map((result) => axios(result.url));
+        const fetchedPokemon = (await Promise.all(promises)).map(
+          (res) => res.data
+        );
+        setPokemon(fetchedPokemon);
+        setTotalPages(Math.ceil(data.count / 20));
+        setIsLoading(false);
+      });
   }, [currentPage]);
 
-  function handleNextPage() {}
+  function handleFirstPage() {
+    setCurrentPage(1);
+  }
+
+  function handlePreviousPage() {
+    setCurrentPage(currentPage - 1);
+  }
+
+  function handleNextPage() {
+    setCurrentPage(currentPage + 1);
+  }
+
+  function handleLastPage() {
+    setCurrentPage(totalPages);
+  }
 
   function handleViewPokemon(pokemon) {
     setSelectedPokemon(pokemon);
@@ -76,9 +98,35 @@ export default function Home() {
               ))}
             </SimpleGrid>
 
-            <Button isLoading={false} onClick={handleNextPage}>
-              Cargas más
-            </Button>
+            <Stack
+              direction="row"
+              justifyContent="center"
+              alignItems="center"
+              spacing={2}
+            >
+              <Button onClick={handleFirstPage} isDisabled={currentPage === 1}>
+                First Page
+              </Button>
+              <Button
+                onClick={handlePreviousPage}
+                isDisabled={currentPage === 1}
+              >
+                Previous Page
+              </Button>
+              <Text>{`Page ${currentPage} of ${totalPages}`}</Text>
+              <Button
+                onClick={handleNextPage}
+                isDisabled={currentPage === totalPages}
+              >
+                Next Page
+              </Button>
+              <Button
+                onClick={handleLastPage}
+                isDisabled={currentPage === totalPages}
+              >
+                Last Page
+              </Button>
+            </Stack>
           </Stack>
         </Container>
       </Flex>
