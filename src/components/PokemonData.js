@@ -20,14 +20,17 @@ import {
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-export default function PokemonData({ pokemon }) {
+export default function PokemonData({ pokemon, updateCaughtPokemon }) {
   const [catched, setCatched] = useState(false);
 
   function handleCatch(catched) {
     if (catched) {
       axios
         .delete(`/api/catched/${pokemon.id}`)
-        .then(() => setCatched(false))
+        .then(() => {
+          setCatched(false);
+          updateCaughtPokemon(pokemon, false);
+        })
         .catch((err) => console.log(err));
     } else {
       axios
@@ -35,7 +38,10 @@ export default function PokemonData({ pokemon }) {
           id: pokemon.id,
           name: pokemon.name,
         })
-        .then(() => setCatched(true))
+        .then(() => {
+          setCatched(true);
+          updateCaughtPokemon(pokemon, true);
+        })
         .catch((err) => console.log(err));
     }
   }

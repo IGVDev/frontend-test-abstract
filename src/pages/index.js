@@ -36,6 +36,14 @@ export default function Home() {
   const [selectedPokemon, setSelectedPokemon] = useState();
   const [currentPage, setCurrentPage] = useState(1);
 
+  const updateCaughtPokemon = (pokemon, isCaught) => {
+    if (isCaught) {
+      setCaughtPokemon([...caughtPokemon, pokemon]);
+    } else {
+      setCaughtPokemon(caughtPokemon.filter((p) => p.id !== pokemon.id));
+    }
+  };
+
   useEffect(() => {
     setIsLoading(true);
     axios
@@ -81,6 +89,10 @@ export default function Home() {
     pokemonDataModal.onOpen();
   }
 
+  const isPokemonCaught = (pokemonId) => {
+    return caughtPokemon.some((pokemon) => pokemon.id === pokemonId);
+  };
+
   return (
     <>
       <Head>
@@ -105,7 +117,10 @@ export default function Home() {
                   key={pokemon.id}
                   onClick={() => handleViewPokemon(pokemon)}
                 >
-                  <PokemonCard pokemon={pokemon} />
+                  <PokemonCard
+                    pokemon={pokemon}
+                    isCaught={isPokemonCaught(pokemon.id)}
+                  />
                 </Box>
               ))}
             </SimpleGrid>
@@ -150,7 +165,12 @@ export default function Home() {
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            {selectedPokemon && <PokemonData pokemon={selectedPokemon} />}
+            {selectedPokemon && (
+              <PokemonData
+                pokemon={selectedPokemon}
+                updateCaughtPokemon={updateCaughtPokemon}
+              />
+            )}
           </ModalBody>
         </ModalContent>
       </Modal>
