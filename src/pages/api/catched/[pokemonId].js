@@ -10,7 +10,7 @@ export default async function handler(req, res) {
 
     return res
       .status(200)
-      .json(data.some((pokemon) => pokemon.id === Number(pokemonId)));
+      .json(data.catchedPokemon.some((pokemon) => pokemon.id === Number(pokemonId)));
   } else if (req.method === "DELETE") {
     try {
       const query = req.query;
