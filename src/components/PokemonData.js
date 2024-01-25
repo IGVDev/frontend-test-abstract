@@ -23,11 +23,42 @@ import { useEffect, useState } from "react";
 export default function PokemonData({ pokemon }) {
   const [catched, setCatched] = useState(false);
 
+  function handleCatch(catched) {
+    if (catched) {
+      axios
+        .delete(`/api/catched/${pokemon.id}`)
+        .then(() => setCatched(false))
+        .catch((err) => console.log(err));
+    } else {
+      axios
+        .post(`/api/catched`, {
+          id: pokemon.id,
+          name: pokemon.name,
+        })
+        .then(() => setCatched(true))
+        .catch((err) => console.log(err));
+    }
+  }
+
+  function checkCatched(id) {
+    axios.get(`/api/catched/${id}`).then((res) => {
+      if (res.status === 200 && res.data) {
+        setCatched(true);
+      }
+    });
+  }
+
+  useEffect(() => {
+    checkCatched(pokemon.id);
+  }, []);
+
   return (
     <Stack spacing="5" pb="5">
       <Stack spacing="5" position="relative">
         <Box position="absolute" right="0" zIndex="99">
-        <Checkbox>Catched</Checkbox>
+          <Checkbox isChecked={catched} onChange={() => handleCatch(catched)}>
+            Catched
+          </Checkbox>
         </Box>
         <AspectRatio w="full" ratio={1}>
           <Image
@@ -64,18 +95,25 @@ export default function PokemonData({ pokemon }) {
       <Stack spacing="5" p="5" bg="gray.100" borderRadius="xl">
         <Stack>
           <Flex justifyContent={"space-between"}>
-          <Text fontSize="xs">hp</Text>
-          <Text fontSize="xs">{pokemon.stats[0].base_stat}</Text>
+            <Text fontSize="xs">hp</Text>
+            <Text fontSize="xs">{pokemon.stats[0].base_stat}</Text>
           </Flex>
-          <Progress bg="gray.300" borderRadius="full" value={pokemon.stats[0].base_stat} />
+          <Progress
+            bg="gray.300"
+            borderRadius="full"
+            value={pokemon.stats[0].base_stat}
+          />
         </Stack>
         <Stack>
           <Flex justifyContent={"space-between"}>
-          <Text fontSize="xs">attack</Text>
-          <Text fontSize="xs">{pokemon.stats[1].base_stat}</Text>
-
+            <Text fontSize="xs">attack</Text>
+            <Text fontSize="xs">{pokemon.stats[1].base_stat}</Text>
           </Flex>
-          <Progress bg="gray.300" borderRadius="full" value={pokemon.stats[1].base_stat} />
+          <Progress
+            bg="gray.300"
+            borderRadius="full"
+            value={pokemon.stats[1].base_stat}
+          />
         </Stack>
       </Stack>
     </Stack>
