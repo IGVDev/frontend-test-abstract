@@ -29,6 +29,7 @@ export default function Home() {
   const pokemonDataModal = useDisclosure();
 
   const [totalPages, setTotalPages] = useState(0);
+  const [caughtPokemon, setCaughtPokemon] = useState([]);
 
   const [isLoading, setIsLoading] = useState(false);
   const [pokemon, setPokemon] = useState([]);
@@ -52,7 +53,12 @@ export default function Home() {
         setTotalPages(Math.ceil(data.count / 20));
         setIsLoading(false);
       });
+    axios.get(`/api/catched`).then((res) => {
+      setCaughtPokemon(res.data);
+    });
   }, [currentPage]);
+
+  useEffect(() => {}, [caughtPokemon]);
 
   function handleFirstPage() {
     setCurrentPage(1);
@@ -83,7 +89,13 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Flex alignItems="center" minH="100vh" justifyContent="center">
+      <Flex
+        alignItems="center"
+        minH="100vh"
+        justifyContent="space-between"
+        padding="6rem"
+        flexDir="column"
+      >
         <Container maxW="container.lg">
           <Stack p="5" alignItems="center" spacing="5">
             <SimpleGrid spacing="5" columns={{ base: 1, md: 5 }}>
