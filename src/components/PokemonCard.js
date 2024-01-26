@@ -47,17 +47,23 @@ export default function PokemonCard({ pokemon, isCaught }) {
         </Box>
       )}
 
-      <AspectRatio w="full" ratio={1}>
-        <Image
-          src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${pokemon.id}.png`}
-        />
-      </AspectRatio>
+      <Box h="125px" w="125px">
+        <AspectRatio w="full" ratio={1}>
+          <Image
+            src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${pokemon.id}.png`}
+          />
+        </AspectRatio>
+      </Box>
       <Text textAlign="center" textTransform="Capitalize">
         {pokemon.name}
       </Text>
       <HStack>
         {pokemon.types.map((type) => (
-          <Badge size="xs" key={type.slot} colorScheme={typeColors[type.type.name]}>
+          <Badge
+            size="xs"
+            key={type.slot}
+            colorScheme={typeColors[type.type.name]}
+          >
             {type.type.name}
           </Badge>
         ))}
