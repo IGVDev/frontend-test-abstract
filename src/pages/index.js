@@ -129,29 +129,43 @@ export default function Home() {
               direction="row"
               justifyContent="center"
               alignItems="center"
-              spacing={2}
+              spacing={0}
+              height="40px"
             >
-              <Button onClick={handleFirstPage} isDisabled={currentPage === 1}>
-                First Page
+              <Button
+                onClick={handleFirstPage}
+                isDisabled={currentPage === 1}
+                borderRightRadius={0}
+                bgColor={"lightgray"}
+              >
+                |&lt;
               </Button>
               <Button
                 onClick={handlePreviousPage}
                 isDisabled={currentPage === 1}
+                borderRadius={0}
+                bgColor={"lightgray"}
               >
-                Previous Page
+                &lt;
               </Button>
-              <Text>{`Page ${currentPage} of ${totalPages}`}</Text>
+              <Flex height="inherit" alignItems={"center"} padding="6">
+                <Text>{`${currentPage} / ${totalPages}`}</Text>
+              </Flex>
               <Button
                 onClick={handleNextPage}
                 isDisabled={currentPage === totalPages}
+                borderRadius={0}
+                bgColor={"lightgray"}
               >
-                Next Page
+                &gt;
               </Button>
               <Button
                 onClick={handleLastPage}
                 isDisabled={currentPage === totalPages}
+                borderLeftRadius={0}
+                bgColor={"lightgray"}
               >
-                Last Page
+                &gt;|
               </Button>
             </Stack>
           </Stack>
