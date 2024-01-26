@@ -21,6 +21,7 @@ import {
   ModalCloseButton,
   useDisclosure,
   Text,
+  Spinner,
 } from "@chakra-ui/react";
 import PokemonCard from "@/components/PokemonCard";
 import PokemonData from "@/components/PokemonData";
@@ -110,7 +111,25 @@ export default function Home() {
       >
         <Container maxW="container.lg">
           <Stack p="5" alignItems="center" spacing="5">
-            <SimpleGrid spacing="5" columns={{ base: 1, md: 5 }}>
+            <SimpleGrid spacing="5" columns={{ base: 1, md: 5 }} position="relative">
+              {isLoading && (
+                <Flex
+                  backdropFilter={"blur(4px)"}
+                  height="100%"
+                  w="100%"
+                  position="absolute"
+                  zIndex="1"
+                  alignItems="center"
+                  justifyContent="center"
+                >
+                  <Spinner
+                    thickness="6px"
+                    emptyColor="gray.400"
+                    speed="0.8s"
+                    size="xl"
+                  />
+                </Flex>
+              )}
               {pokemon.map((pokemon) => (
                 <Box
                   as="button"
