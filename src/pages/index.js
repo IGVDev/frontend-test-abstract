@@ -23,6 +23,7 @@ import {
   Text,
   Spinner,
   Heading,
+  HStack,
 } from "@chakra-ui/react";
 import PokemonCard from "@/components/PokemonCard";
 import PokemonData from "@/components/PokemonData";
@@ -32,6 +33,8 @@ export default function Home() {
 
   const [totalPages, setTotalPages] = useState(0);
   const [caughtPokemon, setCaughtPokemon] = useState([]);
+  const [showCaughtOnly, setShowCaughtOnly] = useState(false);
+  const [caughtPokemonDetails, setCaughtPokemonDetails] = useState([]);
 
   const [isLoading, setIsLoading] = useState(false);
   const [pokemon, setPokemon] = useState([]);
@@ -47,29 +50,54 @@ export default function Home() {
   };
 
   useEffect(() => {
-    setIsLoading(true);
-    axios
-      .get(
-        `https://pokeapi.co/api/v2/pokemon/?limit=20&offset=${
-          (currentPage - 1) * 20
-        }`
-      )
-      .then(async ({ data }) => {
-        const promises = data.results.map((result) => axios(result.url));
-        const fetchedPokemon = (await Promise.all(promises)).map(
-          (res) => res.data
-        );
-        setPokemon(fetchedPokemon);
-        setTotalPages(Math.ceil(data.count / 20));
-        setIsLoading(false);
+    if (!showCaughtOnly) {
+      setIsLoading(true);
+      axios
+        .get(
+          `https://pokeapi.co/api/v2/pokemon/?limit=20&offset=${
+            (currentPage - 1) * 20
+          }`
+        )
+        .then(async ({ data }) => {
+          const promises = data.results.map((result) => axios(result.url));
+          const fetchedPokemon = (await Promise.all(promises)).map(
+            (res) => res.data
+          );
+          setPokemon(fetchedPokemon);
+          setTotalPages(Math.ceil(data.count / 20));
+          setIsLoading(false);
+        });
+      axios.get(`/api/catched`).then((res) => {
+        setCaughtPokemon(res.data);
       });
-    axios.get(`/api/catched`).then((res) => {
-      setCaughtPokemon(res.data);
-    });
-    window.scrollTo(0, 0);
-  }, [currentPage]);
+      window.scrollTo(0, 0);
+    }
+  }, [currentPage, showCaughtOnly]);
 
-  useEffect(() => {}, [caughtPokemon]);
+  useEffect(() => {
+    if (showCaughtOnly && caughtPokemon.length > 0) {
+      setIsLoading(true);
+      const fetchCaughtPokemonDetails = async () => {
+        try {
+          const startIndex = (currentPage - 1) * 20;
+          const caughtSubset = caughtPokemon.slice(startIndex, startIndex + 20);
+          const promises = caughtSubset.map((p) =>
+            axios.get(`https://pokeapi.co/api/v2/pokemon/${p.id}`)
+          );
+          const results = await Promise.all(promises);
+          const details = results.map((res) => res.data);
+          setCaughtPokemonDetails(details);
+          setTotalPages(Math.ceil(caughtPokemon.length / 20));
+        } catch (error) {
+          console.error("Failed to fetch caught Pokémon details:", error);
+        } finally {
+          setIsLoading(false);
+        }
+      };
+
+      fetchCaughtPokemonDetails();
+    }
+  }, [showCaughtOnly, caughtPokemon, currentPage]);
 
   function handleFirstPage() {
     setCurrentPage(1);
@@ -92,9 +120,16 @@ export default function Home() {
     pokemonDataModal.onOpen();
   }
 
-  const isPokemonCaught = (pokemonId) => {
+  function isPokemonCaught(pokemonId) {
     return caughtPokemon.some((pokemon) => pokemon.id === pokemonId);
-  };
+  }
+
+  function toggleCaughtOnly(bool) {
+      setCurrentPage(1);
+      setShowCaughtOnly(bool)
+  }
+
+  const displayedPokemon = showCaughtOnly ? caughtPokemonDetails : pokemon;
 
   return (
     <>
@@ -112,7 +147,28 @@ export default function Home() {
         flexDir="column"
       >
         <Container maxW="container.lg">
-          <Heading textAlign={"center"}>POKEDEX</Heading>
+          <Heading p={4} textAlign={"center"}>
+            POKEDEX
+          </Heading>
+          <nav>
+            <HStack justifyContent={"center"}>
+              <Button
+                onClick={() => toggleCaughtOnly(false)}
+                isDisabled={!showCaughtOnly}
+                aria-label="Show all pokemon"
+              >
+                All Pokemon
+              </Button>
+              <Text> - </Text>
+              <Button
+                onClick={() => toggleCaughtOnly(true)}
+                isDisabled={showCaughtOnly}
+                aria-label="Show caught pokemon only"
+              >
+                My Pokemon
+              </Button>
+            </HStack>
+          </nav>
           <Stack p="5" alignItems="center" spacing="5">
             <SimpleGrid
               spacing="5"
@@ -137,7 +193,7 @@ export default function Home() {
                   />
                 </Flex>
               )}
-              {pokemon.map((pokemon) => (
+              {displayedPokemon.map((pokemon) => (
                 <Box
                   as="button"
                   key={pokemon.id}
@@ -150,6 +206,16 @@ export default function Home() {
                 </Box>
               ))}
             </SimpleGrid>
+            {displayedPokemon.length === 0 && showCaughtOnly && (
+              <Stack justifyContent={"center"}>
+                <Text textAlign={"center"} fontWeight="bold">
+                  You have no Pokemon :(
+                </Text>
+                <Text textAlign={"center"} fontWeight="bold">
+                  Get out there and catch your first one!
+                </Text>
+              </Stack>
+            )}
 
             <nav role="navigation" aria-label="Paginated Navigation">
               <Stack
