@@ -5,26 +5,21 @@ import {
   AspectRatio,
   Image,
   Stack,
-  SimpleGrid,
-  Heading,
-  Tabs,
-  TabList,
-  TabPanels,
-  TabPanel,
   Progress,
   Text,
-  Tab,
   Badge,
   HStack,
   Checkbox,
   Flex,
   useColorModeValue,
+  useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
 export default function PokemonData({ pokemon, updateCaughtPokemon }) {
   const [caught, setCaught] = useState(false);
+  const toast = useToast();
 
   function handleCatch(caught) {
     if (caught) {
@@ -34,7 +29,15 @@ export default function PokemonData({ pokemon, updateCaughtPokemon }) {
           setCaught(false);
           updateCaughtPokemon(pokemon, false);
         })
-        .catch((err) => console.log(err));
+        .catch((err) =>
+          toast({
+            title: "Error",
+            description: "Sorry, something went wrong on our end.",
+            status: "error",
+            duration: 9000,
+            isClosable: true,
+          })
+        );
     } else {
       axios
         .post(`/api/catched`, {
@@ -44,8 +47,23 @@ export default function PokemonData({ pokemon, updateCaughtPokemon }) {
         .then(() => {
           setCaught(true);
           updateCaughtPokemon(pokemon, true);
+          toast({
+            title: "Congratulations!",
+            description: "You caught a Pokemon!",
+            status: "success",
+            duration: 9000,
+            isClosable: true,
+          })
         })
-        .catch((err) => console.log(err));
+        .catch((err) =>
+          toast({
+            title: "Error",
+            description: "Sorry, something went wrong on our end.",
+            status: "error",
+            duration: 9000,
+            isClosable: true,
+          })
+        );
     }
   }
 
@@ -78,8 +96,7 @@ export default function PokemonData({ pokemon, updateCaughtPokemon }) {
           <Image
             objectFit="contain"
             src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${pokemon.id}.png`}
-          borderRadius={12}
-
+            borderRadius={12}
             alt={`Picture of ${pokemon.name}`}
             background={generateGradient(pokemon.types, typeColors)}
           />
@@ -108,7 +125,9 @@ export default function PokemonData({ pokemon, updateCaughtPokemon }) {
                   key={type.slot}
                   background={typeColors[type.type.name].background}
                 >
-                  <Text color={typeColors[type.type.name].text}>{type.type.name}</Text>
+                  <Text color={typeColors[type.type.name].text}>
+                    {type.type.name}
+                  </Text>
                 </Badge>
               ))}
             </HStack>
@@ -116,7 +135,12 @@ export default function PokemonData({ pokemon, updateCaughtPokemon }) {
         </Stack>
       </Stack>
 
-      <Stack spacing="5" p="5" bg={useColorModeValue("gray.100", "gray.800")} borderRadius="xl">
+      <Stack
+        spacing="5"
+        p="5"
+        bg={useColorModeValue("gray.100", "gray.800")}
+        borderRadius="xl"
+      >
         <Stack>
           <Flex justifyContent={"space-between"}>
             <Text fontSize="xs" fontWeight="bold">

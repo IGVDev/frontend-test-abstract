@@ -1,14 +1,10 @@
 import Head from "next/head";
 
-import { Inter, Island_Moments } from "next/font/google";
-import styles from "@/styles/Home.module.css";
 import axios from "axios";
-const inter = Inter({ subsets: ["latin"] });
 import { useEffect, useState } from "react";
 import {
   Container,
   Stack,
-  Input,
   Button,
   SimpleGrid,
   Flex,
@@ -151,9 +147,14 @@ export default function Home() {
         flexDir="column"
       >
         <Container maxW="container.lg">
-        <Button position="absolute" top={8} right={8} onClick={toggleColorMode}>
-          {colorMode === "light" ? <FaMoon /> : <FaSun />}
-        </Button>
+          <Button
+            position="absolute"
+            top={8}
+            right={8}
+            onClick={toggleColorMode}
+          >
+            {colorMode === "light" ? <FaMoon /> : <FaSun />}
+          </Button>
           <Heading p={4} textAlign={"center"}>
             POKEDEX
           </Heading>

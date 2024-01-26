@@ -48,7 +48,9 @@ export default function PokemonCard({ pokemon, isCaught }) {
             key={type.slot}
             bgColor={typeColors[type.type.name].background}
           >
-            <Text color={typeColors[type.type.name].text}>{type.type.name}</Text>
+            <Text color={typeColors[type.type.name].text}>
+              {type.type.name}
+            </Text>
           </Badge>
         ))}
       </HStack>

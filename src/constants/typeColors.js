@@ -19,4 +19,4 @@ const typeColors = {
   fairy: { background: "#D685AD", text: "black" },
 };
 
-export default typeColors
+export default typeColors;
