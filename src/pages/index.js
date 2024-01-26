@@ -28,6 +28,7 @@ import {
 } from "@chakra-ui/react";
 import PokemonCard from "@/components/PokemonCard";
 import PokemonData from "@/components/PokemonData";
+import { FaMoon, FaSun } from "react-icons/fa";
 
 export default function Home() {
   const pokemonDataModal = useDisclosure();
@@ -50,7 +51,7 @@ export default function Home() {
     }
   };
 
-  const {colorMode, toggleColorMode} = useColorMode()
+  const { colorMode, toggleColorMode } = useColorMode();
 
   useEffect(() => {
     if (!showCaughtOnly) {
@@ -128,8 +129,8 @@ export default function Home() {
   }
 
   function toggleCaughtOnly(bool) {
-      setCurrentPage(1);
-      setShowCaughtOnly(bool)
+    setCurrentPage(1);
+    setShowCaughtOnly(bool);
   }
 
   const displayedPokemon = showCaughtOnly ? caughtPokemonDetails : pokemon;
@@ -146,11 +147,14 @@ export default function Home() {
         alignItems="center"
         minH="100vh"
         justifyContent="space-between"
-        padding="6rem"
+        paddingY="2rem"
         flexDir="column"
       >
         <Container maxW="container.lg">
-          <Heading p={4} textAlign={"center"} onClick={toggleColorMode}>
+        <Button position="absolute" top={8} right={8} onClick={toggleColorMode}>
+          {colorMode === "light" ? <FaMoon /> : <FaSun />}
+        </Button>
+          <Heading p={4} textAlign={"center"}>
             POKEDEX
           </Heading>
           <nav>
@@ -243,7 +247,8 @@ export default function Home() {
                   onClick={handlePreviousPage}
                   isDisabled={currentPage === 1}
                   borderRadius={0}
-                  bgColor={"lightgray"}                  color="black"
+                  bgColor={"lightgray"}
+                  color="black"
                   fontWeight="bold"
                   aria-label="Go to previous page"
                 >
