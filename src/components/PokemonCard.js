@@ -1,3 +1,5 @@
+import typeColors from "@/constants/typeColors";
+import generateGradient from "@/utils/generateGradient";
 import {
   Stack,
   Text,
@@ -8,27 +10,6 @@ import {
   Box,
 } from "@chakra-ui/react";
 import { TbPokeball } from "react-icons/tb";
-
-const typeColors = {
-  normal: "gray",
-  fire: "red",
-  water: "blue",
-  electric: "yellow",
-  grass: "green",
-  ice: "cyan",
-  fighting: "orange",
-  poison: "purple",
-  ground: "brown",
-  flying: "gray",
-  psychic: "pink",
-  bug: "teal",
-  rock: "gray",
-  ghost: "black",
-  dragon: "purple",
-  dark: "black",
-  steel: "gray",
-  fairy: "pink",
-};
 
 export default function PokemonCard({ pokemon, isCaught }) {
   return (
@@ -42,19 +23,21 @@ export default function PokemonCard({ pokemon, isCaught }) {
       position="relative"
     >
       {isCaught && (
-        <Box position="absolute" top="2" right="2">
+        <Box position="absolute" top="5" right="5" zIndex={1}>
           <TbPokeball style={{ color: "red" }} size="30px" />
         </Box>
       )}
 
-      <Box h="125px" w="125px">
-        <AspectRatio w="full" ratio={1}>
-          <Image
-            src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${pokemon.id}.png`}
-            alt={`Image of ${pokemon.name}`}
-          />
-        </AspectRatio>
-      </Box>
+      {/* <Box h="125px" w="125px"> */}
+      <AspectRatio w="full" ratio={1}>
+        <Image
+          src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${pokemon.id}.png`}
+          alt={`Image of ${pokemon.name}`}
+          borderRadius={12}
+          background={generateGradient(pokemon.types, typeColors)}
+        />
+      </AspectRatio>
+      {/* </Box> */}
       <Text textAlign="center" textTransform="Capitalize">
         {pokemon.name}
       </Text>
@@ -63,9 +46,9 @@ export default function PokemonCard({ pokemon, isCaught }) {
           <Badge
             size="xs"
             key={type.slot}
-            colorScheme={typeColors[type.type.name]}
+            bgColor={typeColors[type.type.name].background}
           >
-            {type.type.name}
+            <Text color={typeColors[type.type.name].text}>{type.type.name}</Text>
           </Badge>
         ))}
       </HStack>

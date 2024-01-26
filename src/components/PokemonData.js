@@ -1,3 +1,5 @@
+import typeColors from "@/constants/typeColors";
+import generateGradient from "@/utils/generateGradient";
 import {
   Box,
   AspectRatio,
@@ -16,30 +18,10 @@ import {
   HStack,
   Checkbox,
   Flex,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
-
-const typeColors = {
-  normal: "gray",
-  fire: "red",
-  water: "blue",
-  electric: "yellow",
-  grass: "green",
-  ice: "cyan",
-  fighting: "orange",
-  poison: "purple",
-  ground: "brown",
-  flying: "gray",
-  psychic: "pink",
-  bug: "teal",
-  rock: "gray",
-  ghost: "black",
-  dragon: "purple",
-  dark: "black",
-  steel: "gray",
-  fairy: "pink",
-};
 
 export default function PokemonData({ pokemon, updateCaughtPokemon }) {
   const [caught, setCaught] = useState(false);
@@ -87,6 +69,7 @@ export default function PokemonData({ pokemon, updateCaughtPokemon }) {
             isChecked={caught}
             onChange={() => handleCatch(caught)}
             userSelect={"none"}
+            padding={2}
           >
             Caught
           </Checkbox>
@@ -95,7 +78,10 @@ export default function PokemonData({ pokemon, updateCaughtPokemon }) {
           <Image
             objectFit="contain"
             src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${pokemon.id}.png`}
+          borderRadius={12}
+
             alt={`Picture of ${pokemon.name}`}
+            background={generateGradient(pokemon.types, typeColors)}
           />
         </AspectRatio>
         <Stack direction="row" spacing="5">
@@ -120,9 +106,9 @@ export default function PokemonData({ pokemon, updateCaughtPokemon }) {
                 <Badge
                   size="xs"
                   key={type.slot}
-                  colorScheme={typeColors[type.type.name]}
+                  background={typeColors[type.type.name].background}
                 >
-                  {type.type.name}
+                  <Text color={typeColors[type.type.name].text}>{type.type.name}</Text>
                 </Badge>
               ))}
             </HStack>
@@ -130,7 +116,7 @@ export default function PokemonData({ pokemon, updateCaughtPokemon }) {
         </Stack>
       </Stack>
 
-      <Stack spacing="5" p="5" bg="gray.100" borderRadius="xl">
+      <Stack spacing="5" p="5" bg={useColorModeValue("gray.100", "gray.800")} borderRadius="xl">
         <Stack>
           <Flex justifyContent={"space-between"}>
             <Text fontSize="xs" fontWeight="bold">
@@ -141,7 +127,7 @@ export default function PokemonData({ pokemon, updateCaughtPokemon }) {
             </Text>
           </Flex>
           <Progress
-            bg="gray.300"
+            bg={useColorModeValue("gray.300", "gray.600")}
             borderRadius="full"
             value={pokemon.stats[0].base_stat}
           />
@@ -156,7 +142,7 @@ export default function PokemonData({ pokemon, updateCaughtPokemon }) {
             </Text>
           </Flex>
           <Progress
-            bg="gray.300"
+            bg={useColorModeValue("gray.300", "gray.600")}
             borderRadius="full"
             value={pokemon.stats[1].base_stat}
           />

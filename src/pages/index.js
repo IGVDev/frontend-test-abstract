@@ -24,6 +24,7 @@ import {
   Spinner,
   Heading,
   HStack,
+  useColorMode,
 } from "@chakra-ui/react";
 import PokemonCard from "@/components/PokemonCard";
 import PokemonData from "@/components/PokemonData";
@@ -48,6 +49,8 @@ export default function Home() {
       setCaughtPokemon(caughtPokemon.filter((p) => p.id !== pokemon.id));
     }
   };
+
+  const {colorMode, toggleColorMode} = useColorMode()
 
   useEffect(() => {
     if (!showCaughtOnly) {
@@ -147,7 +150,7 @@ export default function Home() {
         flexDir="column"
       >
         <Container maxW="container.lg">
-          <Heading p={4} textAlign={"center"}>
+          <Heading p={4} textAlign={"center"} onClick={toggleColorMode}>
             POKEDEX
           </Heading>
           <nav>
@@ -230,6 +233,8 @@ export default function Home() {
                   isDisabled={currentPage === 1}
                   borderRightRadius={0}
                   bgColor={"lightgray"}
+                  color="black"
+                  fontWeight="bold"
                   aria-label="Go to first page"
                 >
                   |&lt;
@@ -238,7 +243,8 @@ export default function Home() {
                   onClick={handlePreviousPage}
                   isDisabled={currentPage === 1}
                   borderRadius={0}
-                  bgColor={"lightgray"}
+                  bgColor={"lightgray"}                  color="black"
+                  fontWeight="bold"
                   aria-label="Go to previous page"
                 >
                   &lt;
@@ -258,6 +264,8 @@ export default function Home() {
                   isDisabled={currentPage === totalPages}
                   borderRadius={0}
                   bgColor={"lightgray"}
+                  color="black"
+                  fontWeight="bold"
                   aria-label="Go to next page"
                 >
                   &gt;
@@ -267,6 +275,8 @@ export default function Home() {
                   isDisabled={currentPage === totalPages}
                   borderLeftRadius={0}
                   bgColor={"lightgray"}
+                  color="black"
+                  fontWeight="bold"
                   aria-label="Go to last page"
                 >
                   &gt;|
