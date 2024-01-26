@@ -51,6 +51,7 @@ export default function PokemonCard({ pokemon, isCaught }) {
         <AspectRatio w="full" ratio={1}>
           <Image
             src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${pokemon.id}.png`}
+            alt={`Image of ${pokemon.name}`}
           />
         </AspectRatio>
       </Box>

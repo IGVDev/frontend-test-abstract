@@ -42,14 +42,14 @@ const typeColors = {
 };
 
 export default function PokemonData({ pokemon, updateCaughtPokemon }) {
-  const [catched, setCatched] = useState(false);
+  const [caught, setCaught] = useState(false);
 
-  function handleCatch(catched) {
-    if (catched) {
+  function handleCatch(caught) {
+    if (caught) {
       axios
         .delete(`/api/catched/${pokemon.id}`)
         .then(() => {
-          setCatched(false);
+          setCaught(false);
           updateCaughtPokemon(pokemon, false);
         })
         .catch((err) => console.log(err));
@@ -60,50 +60,61 @@ export default function PokemonData({ pokemon, updateCaughtPokemon }) {
           name: pokemon.name,
         })
         .then(() => {
-          setCatched(true);
+          setCaught(true);
           updateCaughtPokemon(pokemon, true);
         })
         .catch((err) => console.log(err));
     }
   }
 
-  function checkCatched(id) {
+  function checkCaught(id) {
     axios.get(`/api/catched/${id}`).then((res) => {
       if (res.status === 200 && res.data) {
-        setCatched(true);
+        setCaught(true);
       }
     });
   }
 
   useEffect(() => {
-    checkCatched(pokemon.id);
+    checkCaught(pokemon.id);
   }, []);
 
   return (
     <Stack spacing="5" pb="5">
       <Stack spacing="5" position="relative">
         <Box position="absolute" right="0" zIndex="99">
-          <Checkbox isChecked={catched} onChange={() => handleCatch(catched)}>
-            Catched
+          <Checkbox
+            isChecked={caught}
+            onChange={() => handleCatch(caught)}
+            userSelect={"none"}
+          >
+            Caught
           </Checkbox>
         </Box>
         <AspectRatio w="full" ratio={1}>
           <Image
             objectFit="contain"
             src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${pokemon.id}.png`}
+            alt={`Picture of ${pokemon.name}`}
           />
         </AspectRatio>
         <Stack direction="row" spacing="5">
           <Stack>
-            <Text fontSize="sm">Weight</Text>
+            <Text fontSize="sm" fontWeight="bold">
+              Weight
+            </Text>
             <Text>{pokemon.weight}</Text>
           </Stack>
           <Stack>
-            <Text fontSize="sm">Height</Text>
+            <Text fontSize="sm" fontWeight="bold">
+              Height
+            </Text>
             <Text>{pokemon.height}</Text>
           </Stack>
           <Stack>
-            <Text fontSize="sm">Tipos</Text>
+            <Text fontSize="sm" fontWeight="bold">
+              Types
+            </Text>
             <HStack>
               {pokemon.types.map((type) => (
                 <Badge
@@ -122,8 +133,12 @@ export default function PokemonData({ pokemon, updateCaughtPokemon }) {
       <Stack spacing="5" p="5" bg="gray.100" borderRadius="xl">
         <Stack>
           <Flex justifyContent={"space-between"}>
-            <Text fontSize="xs">hp</Text>
-            <Text fontSize="xs">{pokemon.stats[0].base_stat}</Text>
+            <Text fontSize="xs" fontWeight="bold">
+              HP
+            </Text>
+            <Text fontSize="xs" fontWeight="bold">
+              {pokemon.stats[0].base_stat}
+            </Text>
           </Flex>
           <Progress
             bg="gray.300"
@@ -133,8 +148,12 @@ export default function PokemonData({ pokemon, updateCaughtPokemon }) {
         </Stack>
         <Stack>
           <Flex justifyContent={"space-between"}>
-            <Text fontSize="xs">attack</Text>
-            <Text fontSize="xs">{pokemon.stats[1].base_stat}</Text>
+            <Text fontSize="xs" fontWeight="bold">
+              ATTACK
+            </Text>
+            <Text fontSize="xs" fontWeight="bold">
+              {pokemon.stats[1].base_stat}
+            </Text>
           </Flex>
           <Progress
             bg="gray.300"
@@ -144,9 +163,10 @@ export default function PokemonData({ pokemon, updateCaughtPokemon }) {
         </Stack>
       </Stack>
       <Stack>
-          <Text fontSize="md" fontWeight="bold">
-            Movimientos
-          </Text>
+        <Text fontSize="md" fontWeight="bold">
+          Moves
+        </Text>
+        <ul>
           {pokemon.moves
             .filter((item, index) => index < 5)
             .map((move) => {
@@ -156,14 +176,15 @@ export default function PokemonData({ pokemon, updateCaughtPokemon }) {
                 .join(" ");
               return (
                 <Text key={move.move.name} fontSize="sm">
-                  {formattedMoveName}
+                  <li>{formattedMoveName}</li>
                 </Text>
               );
             })}
-          {pokemon.moves.length - 5 > 0 && (
-            <Text fontSize="sm">and {pokemon.moves.length - 5} more...</Text>
-          )}
-        </Stack>
+        </ul>
+        {pokemon.moves.length - 5 > 0 && (
+          <Text fontSize="xs">and {pokemon.moves.length - 5} more...</Text>
+        )}
+      </Stack>
     </Stack>
   );
 }

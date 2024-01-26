@@ -22,6 +22,7 @@ import {
   useDisclosure,
   Text,
   Spinner,
+  Heading,
 } from "@chakra-ui/react";
 import PokemonCard from "@/components/PokemonCard";
 import PokemonData from "@/components/PokemonData";
@@ -65,6 +66,7 @@ export default function Home() {
     axios.get(`/api/catched`).then((res) => {
       setCaughtPokemon(res.data);
     });
+    window.scrollTo(0, 0);
   }, [currentPage]);
 
   useEffect(() => {}, [caughtPokemon]);
@@ -110,8 +112,13 @@ export default function Home() {
         flexDir="column"
       >
         <Container maxW="container.lg">
+          <Heading textAlign={"center"}>POKEDEX</Heading>
           <Stack p="5" alignItems="center" spacing="5">
-            <SimpleGrid spacing="5" columns={{ base: 1, md: 5 }} position="relative">
+            <SimpleGrid
+              spacing="5"
+              columns={{ base: 1, md: 5 }}
+              position="relative"
+            >
               {isLoading && (
                 <Flex
                   backdropFilter={"blur(4px)"}
@@ -144,49 +151,62 @@ export default function Home() {
               ))}
             </SimpleGrid>
 
-            <Stack
-              direction="row"
-              justifyContent="center"
-              alignItems="center"
-              spacing={0}
-              height="40px"
-            >
-              <Button
-                onClick={handleFirstPage}
-                isDisabled={currentPage === 1}
-                borderRightRadius={0}
-                bgColor={"lightgray"}
+            <nav role="navigation" aria-label="Paginated Navigation">
+              <Stack
+                direction="row"
+                justifyContent="center"
+                alignItems="center"
+                spacing={0}
+                height="40px"
               >
-                |&lt;
-              </Button>
-              <Button
-                onClick={handlePreviousPage}
-                isDisabled={currentPage === 1}
-                borderRadius={0}
-                bgColor={"lightgray"}
-              >
-                &lt;
-              </Button>
-              <Flex height="inherit" alignItems={"center"} padding="6">
-                <Text>{`${currentPage} / ${totalPages}`}</Text>
-              </Flex>
-              <Button
-                onClick={handleNextPage}
-                isDisabled={currentPage === totalPages}
-                borderRadius={0}
-                bgColor={"lightgray"}
-              >
-                &gt;
-              </Button>
-              <Button
-                onClick={handleLastPage}
-                isDisabled={currentPage === totalPages}
-                borderLeftRadius={0}
-                bgColor={"lightgray"}
-              >
-                &gt;|
-              </Button>
-            </Stack>
+                <Button
+                  onClick={handleFirstPage}
+                  isDisabled={currentPage === 1}
+                  borderRightRadius={0}
+                  bgColor={"lightgray"}
+                  aria-label="Go to first page"
+                >
+                  |&lt;
+                </Button>
+                <Button
+                  onClick={handlePreviousPage}
+                  isDisabled={currentPage === 1}
+                  borderRadius={0}
+                  bgColor={"lightgray"}
+                  aria-label="Go to previous page"
+                >
+                  &lt;
+                </Button>
+                <Flex
+                  height="inherit"
+                  alignItems={"center"}
+                  padding="6"
+                  aria-label={`Page ${currentPage} of ${totalPages}`}
+                >
+                  <Text
+                    whiteSpace={"nowrap"}
+                  >{`${currentPage} / ${totalPages}`}</Text>
+                </Flex>
+                <Button
+                  onClick={handleNextPage}
+                  isDisabled={currentPage === totalPages}
+                  borderRadius={0}
+                  bgColor={"lightgray"}
+                  aria-label="Go to next page"
+                >
+                  &gt;
+                </Button>
+                <Button
+                  onClick={handleLastPage}
+                  isDisabled={currentPage === totalPages}
+                  borderLeftRadius={0}
+                  bgColor={"lightgray"}
+                  aria-label="Go to last page"
+                >
+                  &gt;|
+                </Button>
+              </Stack>
+            </nav>
           </Stack>
         </Container>
       </Flex>
