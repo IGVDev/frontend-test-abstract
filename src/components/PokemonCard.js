@@ -7,7 +7,7 @@ import {
   AspectRatio,
   Box,
 } from "@chakra-ui/react";
-import { FaStar } from "react-icons/fa";
+import { TbPokeball } from "react-icons/tb";
 
 export default function PokemonCard({ pokemon, isCaught }) {
   return (
@@ -22,7 +22,7 @@ export default function PokemonCard({ pokemon, isCaught }) {
     >
       {isCaught && (
         <Box position="absolute" top="2" right="2">
-          <FaStar style={{ color: "gold" }} size="24px" />
+          <TbPokeball style={{ color: "red" }} size="30px" />
         </Box>
       )}
 
