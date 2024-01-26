@@ -20,6 +20,27 @@ import {
 import axios from "axios";
 import { useEffect, useState } from "react";
 
+const typeColors = {
+  normal: "gray",
+  fire: "red",
+  water: "blue",
+  electric: "yellow",
+  grass: "green",
+  ice: "cyan",
+  fighting: "orange",
+  poison: "purple",
+  ground: "brown",
+  flying: "gray",
+  psychic: "pink",
+  bug: "teal",
+  rock: "gray",
+  ghost: "black",
+  dragon: "purple",
+  dark: "black",
+  steel: "gray",
+  fairy: "pink",
+};
+
 export default function PokemonData({ pokemon, updateCaughtPokemon }) {
   const [catched, setCatched] = useState(false);
 
@@ -89,7 +110,11 @@ export default function PokemonData({ pokemon, updateCaughtPokemon }) {
             <Text fontSize="sm">Tipos</Text>
             <HStack>
               {pokemon.types.map((type) => (
-                <Badge size="xs" key={type.slot}>
+                <Badge
+                  size="xs"
+                  key={type.slot}
+                  colorScheme={typeColors[type.type.name]}
+                >
                   {type.type.name}
                 </Badge>
               ))}

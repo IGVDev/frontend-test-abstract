@@ -9,6 +9,27 @@ import {
 } from "@chakra-ui/react";
 import { TbPokeball } from "react-icons/tb";
 
+const typeColors = {
+  normal: "gray",
+  fire: "red",
+  water: "blue",
+  electric: "yellow",
+  grass: "green",
+  ice: "cyan",
+  fighting: "orange",
+  poison: "purple",
+  ground: "brown",
+  flying: "gray",
+  psychic: "pink",
+  bug: "teal",
+  rock: "gray",
+  ghost: "black",
+  dragon: "purple",
+  dark: "black",
+  steel: "gray",
+  fairy: "pink",
+};
+
 export default function PokemonCard({ pokemon, isCaught }) {
   return (
     <Stack
@@ -36,7 +57,7 @@ export default function PokemonCard({ pokemon, isCaught }) {
       </Text>
       <HStack>
         {pokemon.types.map((type) => (
-          <Badge size="xs" key={type.slot}>
+          <Badge size="xs" key={type.slot} colorScheme={typeColors[type.type.name]}>
             {type.type.name}
           </Badge>
         ))}
