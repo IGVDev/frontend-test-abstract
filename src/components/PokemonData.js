@@ -103,10 +103,6 @@ export default function PokemonData({ pokemon, updateCaughtPokemon }) {
             <Text>{pokemon.height}</Text>
           </Stack>
           <Stack>
-            <Text fontSize="sm">Movimientos</Text>
-            <Text>{pokemon.moves.length}</Text>
-          </Stack>
-          <Stack>
             <Text fontSize="sm">Tipos</Text>
             <HStack>
               {pokemon.types.map((type) => (
@@ -147,6 +143,27 @@ export default function PokemonData({ pokemon, updateCaughtPokemon }) {
           />
         </Stack>
       </Stack>
+      <Stack>
+          <Text fontSize="md" fontWeight="bold">
+            Movimientos
+          </Text>
+          {pokemon.moves
+            .filter((item, index) => index < 5)
+            .map((move) => {
+              const formattedMoveName = move.move.name
+                .split("-")
+                .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+                .join(" ");
+              return (
+                <Text key={move.move.name} fontSize="sm">
+                  {formattedMoveName}
+                </Text>
+              );
+            })}
+          {pokemon.moves.length - 5 > 0 && (
+            <Text fontSize="sm">and {pokemon.moves.length - 5} more...</Text>
+          )}
+        </Stack>
     </Stack>
   );
 }
